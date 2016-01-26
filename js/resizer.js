@@ -40,8 +40,11 @@
           this._container.height / 2 - side / 2,
           side);
 
+
+
       // Отрисовка изначального состояния канваса.
       this.redraw();
+
     }.bind(this);
 
     // Фиксирование контекста обработчиков.
@@ -97,9 +100,13 @@
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 7;
 
+
+
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
       this._ctx.save();
+
+
 
       // Установка начальной точки системы координат в центр холста.
       this._ctx.translate(this._container.width / 2, this._container.height / 2);
@@ -118,6 +125,46 @@
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
+
+
+
+
+      // Тонировка фона
+      this._ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      this._ctx.fillRect (
+        -(this._container.width - this._resizeConstraint.side) / 2 - this._resizeConstraint.side / 2,
+        -(this._container.height - this._resizeConstraint.side) / 2 - this._resizeConstraint.side / 2,
+        (this._container.width - this._resizeConstraint.side) / 2 - this._ctx.lineWidth,
+        this._container.height
+      );
+
+      this._ctx.fillRect (
+        - this._resizeConstraint.side / 2 - this._ctx.lineWidth,
+        -(this._container.height - this._resizeConstraint.side) / 2 - this._resizeConstraint.side / 2 ,
+        this._resizeConstraint.side + this._ctx.lineWidth / 2,
+        (this._container.height - this._resizeConstraint.side) / 2 - this._ctx.lineWidth
+      );
+
+      this._ctx.fillRect (
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
+        -(this._container.height - this._resizeConstraint.side) / 2 - this._resizeConstraint.side / 2 ,
+        (this._container.width - this._resizeConstraint.side) / 2 + this._ctx.lineWidth * 2,
+        this._container.height
+      );
+
+      this._ctx.fillRect (
+        - this._resizeConstraint.side / 2 - this._ctx.lineWidth,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
+        this._resizeConstraint.side + this._ctx.lineWidth / 2,
+        (this._container.height - this._resizeConstraint.side) / 2
+      );
+
+
+      // Размеры изображения
+      this._ctx.font = '17px arial';
+      this._ctx.textAlign = 'center';
+      this._ctx.fillStyle = '#ffffff';
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth * 2);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
