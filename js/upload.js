@@ -23,6 +23,9 @@
     CUSTOM: 2
   };
 
+
+
+
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
    * из ключей FileType.
@@ -72,7 +75,23 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    return true;
+
+    var resizeX = resizeForm['resize-x'];
+    var resizeY = resizeForm['resize-y'];
+    var resizeSize = resizeForm['resize-size'];
+    var paramWidth = parseInt(resizeX.value, 10) + parseInt(resizeSize.value, 10);
+    var paramHeight = parseInt(resizeY.value, 10) + parseInt(resizeSize.value, 10);
+
+    if (paramWidth > currentResizer._image.naturalWidth ||
+      paramHeight >  currentResizer._image.naturalHeight ||
+      resizeX.value < 0 ||
+      resizeY.value < 0
+    ) {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   /**
@@ -186,6 +205,12 @@
     uploadForm.classList.remove('invisible');
   };
 
+  /* Если меняем значение любого инпута формы, то делаем кнопку
+  сабмит активной */
+  resizeForm.onchange = function () {
+  document.getElementById('resize-fwd').removeAttribute("disabled");
+  }
+
   /**
    * Обработка отправки формы кадрирования. Если форма валидна, экспортирует
    * кропнутое изображение в форму добавления фильтра и показывает ее.
@@ -200,7 +225,14 @@
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
+
+    else {
+      document.getElementById('resize-fwd').setAttribute("disabled", "true");
+      alert('Размер нового изображения больше, чем размер исходного')
+    }
   };
+
+
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
