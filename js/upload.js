@@ -23,9 +23,6 @@
     CUSTOM: 2
   };
 
-
-
-
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
    * из ключей FileType.
@@ -84,8 +81,9 @@
 
     if (paramWidth > currentResizer._image.naturalWidth ||
       paramHeight >  currentResizer._image.naturalHeight ||
-      resizeX.value < 0 ||
-      resizeY.value < 0
+      resizeX.value <= 0 ||
+      resizeY.value <= 0 ||
+      resizeSize.value <= 0
     ) {
       return false;
     }
@@ -207,8 +205,8 @@
 
   /* Если меняем значение любого инпута формы, то делаем кнопку
   сабмит активной */
-  resizeForm.onchange = function () {
-  document.getElementById('resize-fwd').removeAttribute("disabled");
+  resizeForm.oninput = function () {
+  document.getElementById('resize-fwd').disabled = !resizeFormIsValid();
   }
 
   /**
@@ -227,8 +225,7 @@
     }
 
     else {
-      document.getElementById('resize-fwd').setAttribute("disabled", "true");
-      alert('Размер нового изображения больше, чем размер исходного')
+      alert('Неверные параметры')
     }
   };
 
