@@ -224,9 +224,6 @@
       filterForm.classList.remove('invisible');
     }
 
-    else {
-      alert('Неверные параметры')
-    }
   };
 
 
