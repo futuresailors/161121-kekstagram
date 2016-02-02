@@ -222,11 +222,12 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+
+      document.getElementById('upload-filter-' + docCookies.getItem('filter')).checked = true;
+      filterImage.classList.add('filter-' + docCookies.getItem('filter'));
     }
 
   };
-
-
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
@@ -246,6 +247,18 @@
    */
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
+
+    var currentDate = new Date();
+    var birthYear = currentDate.getFullYear();
+    var myBirthday = new Date(birthYear + '-05-22');
+
+    if (myBirthday >= currentDate) {
+      myBirthday = new Date((birthYear - 1) + '-05-22');
+    };
+
+    var dateToExpire = currentDate.valueOf() + (currentDate.valueOf() - myBirthday.valueOf());
+    var lastFilter = document.querySelector('input[name="upload-filter"]:checked');
+    docCookies.setItem('filter', lastFilter.value, dateToExpire);
 
     cleanupResizer();
     updateBackground();
