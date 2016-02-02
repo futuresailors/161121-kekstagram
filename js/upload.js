@@ -81,8 +81,8 @@
 
     if (paramWidth > currentResizer._image.naturalWidth ||
       paramHeight >  currentResizer._image.naturalHeight ||
-      resizeX.value <= 0 ||
-      resizeY.value <= 0 ||
+      resizeX.value < 0 ||
+      resizeY.value < 0 ||
       resizeSize.value <= 0
     ) {
       return false;
