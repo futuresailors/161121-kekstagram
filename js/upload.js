@@ -1,4 +1,5 @@
 /* global Resizer: true */
+/* global docCookies, Resizer: true */
 
 /**
  * @fileoverview
@@ -79,15 +80,9 @@
     var paramWidth = parseInt(resizeX.value, 10) + parseInt(resizeSize.value, 10);
     var paramHeight = parseInt(resizeY.value, 10) + parseInt(resizeSize.value, 10);
 
-    if (paramWidth > currentResizer._image.naturalWidth ||
-      paramHeight >  currentResizer._image.naturalHeight ||
-      resizeX.value < 0 ||
-      resizeY.value < 0 ||
-      resizeSize.value <= 0
-    ) {
+    if (paramWidth > currentResizer._image.naturalWidth || paramHeight > currentResizer._image.naturalHeight || resizeX.value < 0 || resizeY.value < 0 || resizeSize.value <= 0) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }
@@ -205,10 +200,9 @@
 
   /* Если меняем значение любого инпута формы, то делаем кнопку
   сабмит активной */
-  resizeForm.oninput = function () {
-  document.getElementById('resize-fwd').disabled = !resizeFormIsValid();
-  }
-
+  resizeForm.oninput = function() {
+    document.getElementById('resize-fwd').disabled = !resizeFormIsValid();
+  };
   /**
    * Обработка отправки формы кадрирования. Если форма валидна, экспортирует
    * кропнутое изображение в форму добавления фильтра и показывает ее.
@@ -222,11 +216,15 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+
+      if (docCookies.getItem('filter')) {
+        document.getElementById('upload-filter-' + (docCookies.getItem('filter'))).checked = true;
+        filterImage.classList.add('filter-' + docCookies.getItem('filter'));
+      } else {
+        return;
+      }
     }
-
   };
-
-
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
@@ -246,6 +244,19 @@
    */
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
+
+    var currentDate = new Date();
+    var birthYear = currentDate.getFullYear();
+    var myBirthday = new Date(birthYear + '-05-22');
+
+    if (myBirthday >= currentDate) {
+      myBirthday = new Date((birthYear - 1) + '-05-22');
+    }
+
+    var dateToExpire = currentDate.getTime() + (currentDate - myBirthday);
+
+    var lastFilter = document.querySelector('input[name="upload-filter"]:checked');
+    docCookies.setItem('filter', lastFilter.value, new Date(dateToExpire));
 
     cleanupResizer();
     updateBackground();
