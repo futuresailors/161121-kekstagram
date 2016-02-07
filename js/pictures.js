@@ -4,11 +4,9 @@
 
   var filterMenu = document.querySelector('.filters');
 
-  if (filterMenu.classList.contains('hidden')) {
-    true;
-  } else {
+  if (filterMenu.className !== 'hidden') {
     filterMenu.classList.add('hidden');
-  };
+  }
 
   var container = document.querySelector('.pictures');
   pictures.forEach(function(picture) {
