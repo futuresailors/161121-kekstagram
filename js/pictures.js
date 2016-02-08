@@ -17,7 +17,13 @@
 
   function getElementFromTemplate(data) {
     var template = document.querySelector('#picture-template');
-    var element = template.content.children[0].cloneNode(true);
+
+    if ('content' in template) {
+      var element = template.content.children[0].cloneNode(true);
+    } else {
+      var element = template.childNodes[0].cloneNode(true);
+    }
+
     element.querySelector('.picture-comments').textContent = data.comments;
     element.querySelector('.picture-likes').textContent = data.likes;
     var templateImage = element.querySelector('img');
