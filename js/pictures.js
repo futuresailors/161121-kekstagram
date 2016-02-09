@@ -7,10 +7,13 @@
   filterMenu.classList.add('hidden');
 
   var container = document.querySelector('.pictures');
-  pictures.forEach(function(picture) {
+
+  pictures.forEach(function(picture, idx, array) {
     var element = getElementFromTemplate(picture);
     container.appendChild(element);
-    filterMenu.classList.remove('hidden');
+    if (idx === array.length - 1) {
+      filterMenu.classList.remove('hidden');
+    }
   });
 
   function getElementFromTemplate(data) {
