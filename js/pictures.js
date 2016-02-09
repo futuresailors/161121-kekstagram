@@ -4,9 +4,7 @@
 
   var filterMenu = document.querySelector('.filters');
 
-  if (filterMenu.className !== 'hidden') {
-    filterMenu.classList.add('hidden');
-  }
+  filterMenu.classList.add('hidden');
 
   var container = document.querySelector('.pictures');
   pictures.forEach(function(picture) {
@@ -17,22 +15,23 @@
 
   function getElementFromTemplate(data) {
     var template = document.querySelector('#picture-template');
+    var element;
 
     if ('content' in template) {
-      var element = template.content.children[0].cloneNode(true);
+      element = template.content.children[0].cloneNode(true);
     } else {
-      var element = template.childNodes[0].cloneNode(true);
+      element = template.childNodes[0].cloneNode(true);
     }
 
     element.querySelector('.picture-comments').textContent = data.comments;
     element.querySelector('.picture-likes').textContent = data.likes;
     var templateImage = element.querySelector('img');
-    var bgImage = new Image();
+    var bgImage = new Image(182, 182);
     bgImage.src = data.url;
     bgImage.onload = function() {
       element.replaceChild(bgImage, templateImage);
-      bgImage.width = '182';
-      bgImage.style.height = '182px';
+      //bgImage.width = '182';
+      //bgImage.style.height = '182px';
     };
 
     bgImage.onerror = function() {
