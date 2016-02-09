@@ -30,8 +30,6 @@
     bgImage.src = data.url;
     bgImage.onload = function() {
       element.replaceChild(bgImage, templateImage);
-      //bgImage.width = '182';
-      //bgImage.style.height = '182px';
     };
 
     bgImage.onerror = function() {
