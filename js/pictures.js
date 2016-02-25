@@ -11,8 +11,6 @@
 
   var pictures = [];
 
-  //var activeFilter = 'filter-popular';
-
   for (var i = 0; i < filters.length; i++) {
     filters[i].onclick = function(evt) {
       var clickedElementID = evt.target.id;
@@ -22,26 +20,19 @@
 
   getPictures();
 
-  function renderPictures(pictures) {
+  function renderPictures(data) {
     container.innerHTML = '';
 
-    pictures.forEach(function(picture, idx, array) {
+    data.forEach(function(picture, idx, array) {
       var element = getElementFromTemplate(picture);
       container.appendChild(element);
       if (idx === array.length - 1) {
         filterMenu.classList.remove('hidden');
       }
-
     });
   }
 
   function setActiveFilter(id) {
-
-    /* if (activeFilter === id) {
-      return;
-    } */
-
-    //document.querySelector('#' + activeFilter).checked = false;
     document.querySelector('#' + id).checked = true;
 
     var filteredPictures = pictures.slice();
@@ -83,11 +74,10 @@
     };
     xhr.send();
     xhr.timeout = 10000;
-
   }
 
-
   function getElementFromTemplate(data) {
+    container.classList.add('pictures-loading');
     var template = document.querySelector('#picture-template');
     var element;
 
@@ -103,7 +93,7 @@
     var bgImage = new Image(182, 182);
     bgImage.src = data.url;
     bgImage.onload = function() {
-      container.classList.add('pictures-loading');
+      container.classList.remove('pictures-loading');
       element.replaceChild(bgImage, templateImage);
     };
     bgImage.onerror = function() {
@@ -113,7 +103,7 @@
         element.classList.add('picture-load-failure');
       }, 10000);
     };
-    container.classList.remove('pictures-loading');
+
     return element;
   }
 })();
