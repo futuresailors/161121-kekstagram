@@ -11,7 +11,7 @@
 
   var pictures = [];
 
-  var activeFilter = 'filter-popular';
+  //var activeFilter = 'filter-popular';
 
   for (var i = 0; i < filters.length; i++) {
     filters[i].onclick = function(evt) {
@@ -31,29 +31,39 @@
       if (idx === array.length - 1) {
         filterMenu.classList.remove('hidden');
       }
-      console.log(pictures);
+
     });
   }
 
   function setActiveFilter(id) {
-    if (activeFilter === id) {
-      return;
-    }
 
-    document.querySelector('#' + activeFilter).checked = false;
+    /* if (activeFilter === id) {
+      return;
+    } */
+
+    //document.querySelector('#' + activeFilter).checked = false;
     document.querySelector('#' + id).checked = true;
 
-    var filteredPictures = pictures.slice(0);
-    //console.log(filteredPictures);
+    var filteredPictures = pictures.slice();
+    var currentDate = new Date();
 
     switch (id) {
       case 'filter-popular':
-        filteredPictures = filteredPictures.sort(function(a, b) {
-          return a.date - b.date; });
+        filteredPictures = pictures;
         break;
       case 'filter-new':
-        //filteredPictures = filteredPictures.sort(function(a, b) {return b - a;});
-        filteredPictures = filteredPictures;
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          return new Date(b.date) - new Date(a.date);
+        }).filter(function(item) {
+          return new Date(item.date) >= (currentDate.getTime() - (14 * 24 * 60 * 60 * 1000));
+        })
+        ;
+        break;
+      case 'filter-discussed':
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          return b.comments - a.comments;
+        });
+        break;
     }
 
     renderPictures(filteredPictures);
@@ -61,17 +71,19 @@
 
   function getPictures() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
-    //xhr.open('GET', 'api.openweathermap.org/data/2.5/weather?q=London', true);
+    xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json', true);
     xhr.onload = function(evt) {
       var rawData = evt.srcElement.response;
       var loadedPictures = JSON.parse(rawData);
+      pictures = loadedPictures;
       renderPictures(loadedPictures);
-      //console.log(evt);
-      //console.log(loadedPictures);
+    };
+    xhr.onerror = function() {
+      container.classList.add('pictures-failure');
     };
     xhr.send();
     xhr.timeout = 10000;
+
   }
 
 
@@ -91,9 +103,9 @@
     var bgImage = new Image(182, 182);
     bgImage.src = data.url;
     bgImage.onload = function() {
+      container.classList.add('pictures-loading');
       element.replaceChild(bgImage, templateImage);
     };
-
     bgImage.onerror = function() {
       element.classList.add('picture-load-failure');
       setTimeout(function() {
@@ -101,6 +113,7 @@
         element.classList.add('picture-load-failure');
       }, 10000);
     };
+    container.classList.remove('pictures-loading');
     return element;
   }
 })();
